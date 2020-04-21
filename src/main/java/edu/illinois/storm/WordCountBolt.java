@@ -26,7 +26,7 @@ public class WordCountBolt extends BaseBasicBolt {
     String word = (String) tuple.getValues().get(0);
     int count = 1 + counts.getOrDefault(word, 0);
     counts.put(word, count);
-    collector.emit(tuple(word, count));
+    collector.emit(tuple(word, Integer.toString(count)));
 		// End
   }
 
