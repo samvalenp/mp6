@@ -45,7 +45,6 @@ components:
   # redis hash key for part A is "partAWordCount"
   - id: "bolt-3"
     className: "edu.illinois.storm.WordCountStoreMapper"
-    parallelism: 1
     constructorArgs:
       - "partAWordCount"
 
