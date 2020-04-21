@@ -85,7 +85,7 @@ bolts:
 # stream definitions define connections between spouts and bolts.
 streams:
   - name: "spout-1 --> bolt-1"
-    from: "spout1"
+    from: "spout-1"
     to: "bolt-1"
     grouping:
       type: SHUFFLE
