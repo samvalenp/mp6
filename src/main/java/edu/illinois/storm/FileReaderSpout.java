@@ -26,7 +26,7 @@ public class FileReaderSpout implements IRichSpout {
   public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
     this._context = context;
     this._collector = collector;
-    this.scanner = new Scanner(new File("inputFile"));
+    this.sc = new Scanner(new File("inputFile"));
     /* ----------------------TODO-----------------------
     Task: initialize the file reader
     ------------------------------------------------- */
