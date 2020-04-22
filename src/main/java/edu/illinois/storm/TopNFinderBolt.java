@@ -49,7 +49,7 @@ public class TopNFinderBolt extends BaseRichBolt {
 
     if(top.size() > this.limit){
       String minS;
-      int min = Integer.MAX_INT;
+      int min = Integer.MAX_VALUE;
       for(String w : top.keySet()){
         if(top.get(w) < min){
           min = top.get(w);
