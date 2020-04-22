@@ -53,6 +53,7 @@ public class TopNFinderBolt extends BaseRichBolt {
 
     StringBuilder sb = new StringBuilder();
     for (Pair<Integer, String> item : top) {
+      System.out.println("LOCOOOOOOOOOOOOO   " + item.second);
       sb.append(item.second + ", ");
     }
 
