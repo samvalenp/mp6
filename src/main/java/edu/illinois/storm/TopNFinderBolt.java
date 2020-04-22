@@ -45,6 +45,7 @@ public class TopNFinderBolt extends BaseRichBolt {
     ------------------------------------------------- */
     String word = (String) tuple.getValues().get(0);
     int count = Integer.parseInt((String)tuple.getValues().get(1));
+    System.out.println("LOCOOOOOOOOOOOOO   " + word + " " + count);
 
     top.add(new Pair<Integer, String>(count, word));
     if(top.size() > this.limit){
@@ -53,7 +54,7 @@ public class TopNFinderBolt extends BaseRichBolt {
 
     StringBuilder sb = new StringBuilder();
     for (Pair<Integer, String> item : top) {
-      System.out.println("LOCOOOOOOOOOOOOO   " + item.second);
+      System.out.println("estaaaas   " + item);
       sb.append(item.second + ", ");
     }
 
