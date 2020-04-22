@@ -2,6 +2,7 @@ package edu.illinois.storm;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashSet;
 import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseBasicBolt;
