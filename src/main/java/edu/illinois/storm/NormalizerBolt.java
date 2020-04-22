@@ -11,12 +11,12 @@ import org.apache.storm.tuple.Values;
 
 /** A bolt that normalizes the words, by removing common words and making them lower case. */
 public class NormalizerBolt extends BaseBasicBolt {
-  private List<String> commonWords =
-      Arrays.asList(
+  private HashSet<String> commonWords =
+      new HashSet<String>(Arrays.asList(
           "the", "be", "a", "an", "and", "of", "to", "in", "am", "is", "are", "at", "not", "that",
           "have", "i", "it", "for", "on", "with", "he", "she", "as", "you", "do", "this", "but",
           "his", "by", "from", "they", "we", "her", "or", "will", "my", "one", "all", "s", "if",
-          "any", "our", "may", "your", "these", "d", " ", "me", "so", "what", "him", "their");
+          "any", "our", "may", "your", "these", "d", " ", "me", "so", "what", "him", "their"));
 
   @Override
   public void execute(Tuple tuple, BasicOutputCollector collector) {
@@ -26,7 +26,12 @@ public class NormalizerBolt extends BaseBasicBolt {
      1. make the words all lower case
      2. remove the common words
     ------------------------------------------------- */
+    String word = (String) tuple.getValues().get(0);
+    word = word.toLowerCase();
 
+    if(!commonWords.contains(word)){
+      collector.emit(new Values(word));
+    }
     // END
 
   }
@@ -36,7 +41,7 @@ public class NormalizerBolt extends BaseBasicBolt {
     /* ----------------------TODO-----------------------
     Task: define the declarer
     ------------------------------------------------- */
-
+    declarer.declare(new Fields("word"));
     // END
 
   }
