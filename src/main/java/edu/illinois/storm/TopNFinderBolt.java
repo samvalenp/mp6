@@ -14,7 +14,8 @@ import org.apache.storm.tuple.Values;
 /** a bolt that finds the top n words. */
 public class TopNFinderBolt extends BaseRichBolt {
   private OutputCollector collector;
-
+  private TreeSet<Pair<Integer, String>> top = new TreeSet<Pair<Integer, String>>();
+  private int limit;
   // Hint: Add necessary instance variables and inner classes if needed
 
 
@@ -23,11 +24,11 @@ public class TopNFinderBolt extends BaseRichBolt {
     this.collector = collector;
   }
 
-  public TopNFinderBolt withNProperties(int N) {
+  public TopNFinderBolt withNProperties(int n) {
     /* ----------------------TODO-----------------------
     Task: set N
     ------------------------------------------------- */
-
+    this.limit = n;
 		// End
 		return this;
   }
@@ -39,7 +40,20 @@ public class TopNFinderBolt extends BaseRichBolt {
 		Hint: implement efficient algorithm so that it won't be shutdown before task finished
 		      the algorithm we used when we developed the auto-grader is maintaining a N size min-heap
     ------------------------------------------------- */
+    String word = (String) tuple.getValues().get(0);
+    int count = Integer.parseInt(tuple.getValues().get(1));
 
+    top.add(new Pair<Integer, String>(count, word));
+    if(top.size() > this.limit){
+      top.remove(top.first());
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (Pair<Integer, String> item : top) {
+      sb.append(item.second + ", ");
+    }
+
+    collector.emit(tuple("top-N", sb.substring(0, sb.length() - 2)));
 		// End
   }
 
@@ -51,7 +65,7 @@ public class TopNFinderBolt extends BaseRichBolt {
 					For example, for top 3 words set ("hello", "word", "cs498"),
 					"hello, world, cs498" and "world, cs498, hello" are all correct
     ------------------------------------------------- */
-
+    declarer.declare(new Fields("top-N", "words"));
     // END
   }
 

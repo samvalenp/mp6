@@ -45,6 +45,11 @@ components:
       - 0
 
   # TODO
+  - id: "bolt-5"
+    className: "edu.illinois.storm.TopNStoreMapper"
+    constructorArgs:
+      - "partDWordCount"
+
   # Task: implement the redis store mapper
   # src/main/java/edu/illinois/storm/TopNStoreMapper.java
   # redis hash key for part D is "partDTopN"
@@ -54,6 +59,13 @@ spouts:
   # Hint: the new file reading spout you need implement in this part is
   # src/main/java/edu/illinois/storm/FileReaderSpout.java
   # You need to pass file name here using <withInputFileProperties> function
+  - id: "spout-1"
+    className: "edu.illinois.storm.FileReaderSpout"
+    parallelism: 1
+    configMethods:
+      - name: "withInputFileProperties"
+        args:
+          - "/tmp/data.txt"
 
 # bolt definitions
 bolts:
@@ -62,7 +74,74 @@ bolts:
   # You need to pass N to the bolt here using <withNProperties> function
   # make sure it's 10 in your final submission
 
+  - id: "bolt-1"
+    className: "edu.illinois.storm.SplitSentenceBolt"
+    parallelism: 1
+
+  - id: "bolt-2"
+    className: "edu.illinois.storm.NormalizerBolt"
+    parallelism: 1
+
+  # TODO
+  # Task: implement the word count bolt
+  # src/main/java/edu/illinois/storm/WordCountBolt.java
+  - id: "bolt-3"
+    className: "edu.illinois.storm.WordCountBolt"
+    parallelism: 1
+
+  - id: "bolt-4"
+    className: "edu.illinois.storm.TopNFinderBolt"
+    parallelism: 1
+    configMethods:
+      - name: "withNProperties"
+        args:
+          - 10
+
+
+
+  # TODO
+  # Task: initialize RedisStoreBolt using poolConfig and storeMapper
+  # ClassName is "org.apache.storm.redis.bolt.RedisStoreBolt"
+  - id: "redisStoreBolt"
+    className: "org.apache.storm.redis.bolt.RedisStoreBolt"
+    constructorArgs:
+      - ref: "poolConfig"
+      - ref: "bolt-5"
+
 
 # stream definitions
 # stream definitions define connections between spouts and bolts.
 streams:
+  - name: "spout-1 --> bolt-1"
+    from: "spout-1"
+    to: "bolt-1"
+    grouping:
+      type: SHUFFLE
+  # Task: pipe output of sentences generating spout to split bolt
+
+  - name: "split --> normalizer"
+    from: "bolt-1"
+    to: "bolt-2"
+    grouping:
+      type: SHUFFLE
+
+  - name: "normalizer --> counter"
+    from: "bolt-2"
+    to: "bolt-3"
+    grouping:
+      type: FIELDS
+      args: ["word"]
+
+  - name: "counter --> top"
+    from: "bolt-3"
+    to: "bolt-4"
+    grouping:
+      type: SHUFFLE
+  # Task: pipe output of split bolt to word count bolt
+  # Hint: choose the right grouping type to make problem easier
+
+  - name: "top --> store"
+    from: "bolt-4"
+    to: "redisStoreBolt"
+    grouping:
+      type: SHUFFLE
