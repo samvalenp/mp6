@@ -44,7 +44,7 @@ public class TopNFinderBolt extends BaseRichBolt {
 		      the algorithm we used when we developed the auto-grader is maintaining a N size min-heap
     ------------------------------------------------- */
     String word = (String) tuple.getValues().get(0);
-    int count = Integer.parseInt(tuple.getValues().get(1));
+    int count = Integer.parseInt((String)tuple.getValues().get(1));
 
     top.add(new Pair<Integer, String>(count, word));
     if(top.size() > this.limit){
