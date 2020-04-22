@@ -48,7 +48,7 @@ components:
   - id: "bolt-5"
     className: "edu.illinois.storm.TopNStoreMapper"
     constructorArgs:
-      - "partDWordCount"
+      - "partDTopN"
 
   # Task: implement the redis store mapper
   # src/main/java/edu/illinois/storm/TopNStoreMapper.java
