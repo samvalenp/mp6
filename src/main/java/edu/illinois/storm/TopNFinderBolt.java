@@ -48,7 +48,7 @@ public class TopNFinderBolt extends BaseRichBolt {
     top.put(word, count);
 
     if(top.size() > this.limit){
-      String minS;
+      String minS = "";
       int min = Integer.MAX_VALUE;
       for(String w : top.keySet()){
         if(top.get(w) < min){
