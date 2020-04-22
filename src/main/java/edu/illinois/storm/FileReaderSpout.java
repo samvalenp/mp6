@@ -17,6 +17,7 @@ public class FileReaderSpout implements IRichSpout {
   private SpoutOutputCollector _collector;
   private TopologyContext _context;
   private String inputFile;
+  private Scanner sc;
 
   // Hint: Add necessary instance variables if needed
 
@@ -24,7 +25,7 @@ public class FileReaderSpout implements IRichSpout {
   public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
     this._context = context;
     this._collector = collector;
-
+    this.scanner = new Scanner(new File("inputFile"));
     /* ----------------------TODO-----------------------
     Task: initialize the file reader
     ------------------------------------------------- */
@@ -41,7 +42,12 @@ public class FileReaderSpout implements IRichSpout {
 
   @Override
   public void nextTuple() {
-
+    if(sc.hasNextLine()){
+      String line = sc.nextLine();
+      _collector.emit(new Values(line));
+    }else{
+      Utils.sleep(1000);
+    }
     /* ----------------------TODO-----------------------
     Task:
     1. read the next line and emit a tuple for it
@@ -55,7 +61,7 @@ public class FileReaderSpout implements IRichSpout {
     /* ----------------------TODO-----------------------
     Task: define the declarer
     ------------------------------------------------- */
-
+    declarer.declare(new Fields("line"));
     // END
   }
 
@@ -64,7 +70,7 @@ public class FileReaderSpout implements IRichSpout {
     /* ----------------------TODO-----------------------
     Task: close the file
     ------------------------------------------------- */
-
+    sc.close();
     // END
 
   }
