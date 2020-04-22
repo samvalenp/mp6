@@ -17,7 +17,7 @@ import static org.apache.storm.utils.Utils.tuple;
 /** a bolt that finds the top n words. */
 public class TopNFinderBolt extends BaseRichBolt {
   private OutputCollector collector;
-  private TreeSet<Pair<Integer, String>> top = new TreeSet<Pair<Integer, String>>();
+  private HashMap<String, Integer> top = new HashMap<String, Integer>();
   private int limit;
   // Hint: Add necessary instance variables and inner classes if needed
 
@@ -45,17 +45,25 @@ public class TopNFinderBolt extends BaseRichBolt {
     ------------------------------------------------- */
     String word = (String) tuple.getValues().get(0);
     int count = Integer.parseInt((String)tuple.getValues().get(1));
-    //System.out.println("LOCOOOOOOOOOOOOO   " + word + " " + count);
+    top.put(word, count);
 
-    top.add(new Pair<Integer, String>(count, word));
     if(top.size() > this.limit){
-      top.remove(top.first());
+      String minS;
+      int min = Integer.MAX_INT;
+      for(String w : top.keySet()){
+        if(top.get(w) < min){
+          min = top.get(w);
+          minS = w;
+        }
+      }
+
+      top.remove(minS);
     }
 
     StringBuilder sb = new StringBuilder();
-    for (Pair<Integer, String> item : top) {
+    for (String w : top.keySet()) {
       //System.out.println("estaaaas   " + item);
-      sb.append(item.second + ", ");
+      sb.append(w + ", ");
     }
 
     collector.emit(tuple("top-N", sb.substring(0, sb.length() - 2)));
