@@ -30,7 +30,7 @@ public class FileReaderSpout implements IRichSpout {
     this._collector = collector;
 
     try{
-      this.sc = new Scanner(new File("inputFile"));
+      this.sc = new Scanner(new File(inputFile));
     }catch(FileNotFoundException s){
       System.out.println("Taaaaaas que no");
     }
