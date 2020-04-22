@@ -12,6 +12,8 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import java.util.TreeSet;
 
+import static org.apache.storm.utils.Utils.tuple;
+
 /** a bolt that finds the top n words. */
 public class TopNFinderBolt extends BaseRichBolt {
   private OutputCollector collector;
