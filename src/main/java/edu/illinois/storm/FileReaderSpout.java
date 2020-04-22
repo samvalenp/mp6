@@ -11,6 +11,7 @@ import org.apache.storm.topology.IRichSpout;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
+import java.util.Scanner;
 
 /** a spout that generate sentences from a file */
 public class FileReaderSpout implements IRichSpout {
